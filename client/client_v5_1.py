@@ -2,7 +2,6 @@ import asyncio
 import json
 import os
 from dotenv import load_dotenv
-import os
 import httpx
 
 load_dotenv()
@@ -135,7 +134,13 @@ Available MCP tools:
    Inputs:
    - state
 
-Return ONLY JSON.
+Return ONLY valid JSON.
+
+Do not use markdown.
+Do not use code blocks.
+Do not use ```json.
+
+Return raw JSON only.
 
 Examples:
 
@@ -275,19 +280,37 @@ async def main():
                         user_query
                     )
 
+                    tool_response = (
+                        tool_response
+                        .replace("```json", "")
+                        .replace("```", "")
+                        .strip()
+                    )
+
                     print(
                         "\nGemini Tool Decision:"
                     )
 
                     print(tool_response)
 
-                    tool_data = json.loads(
-                        tool_response
-                    )
+                    try:
 
-                    tool_name = tool_data.get(
-                        "tool"
-                    )
+                        tool_data = json.loads(
+                            tool_response
+                        )
+                        tool_name = tool_data.get(
+                            "tool"
+                        )
+
+                    except json.JSONDecodeError:
+
+                        print(
+                            "\nInvalid JSON returned by Gemini:"
+                        )
+
+                        print(tool_response)
+
+                        continue
 
                     if tool_name == "get_forecast":
 
