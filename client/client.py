@@ -45,8 +45,7 @@ async def main():
             result = await session.call_tool(
                 "get_alerts",
                 {
-                    "latitude": 40.7128,
-                    "longitude": -74.0060
+                    "state": "CA"
                 }
             )
 
