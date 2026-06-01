@@ -222,7 +222,7 @@ async def main():
             "--directory",
             r"D:\my first mcp\weather",
             "run",
-            "server\\weather.py"
+            "server\\weather_v5_2.py"
         ]
     )
 
