@@ -65,14 +65,37 @@ Retrieve weather forecast information using geographic coordinates.
 
 ```text
 weather/
-├── weather.py
+├── client/
+│   └── client.py
+├── server/
+│   └── weather.py
+├── .vscode/
+│   └── mcp.json
 ├── pyproject.toml
 ├── uv.lock
 ├── README.md
-├── main.py
-└── .vscode/
-    └── mcp.json
+└── main.py
 ```
+
+---
+
+## Folder Overview
+
+### server/
+
+Contains the MCP server implementation. The entry point is `server/weather.py`, which defines the MCP tools and runs the server over STDIO.
+
+### client/
+
+Contains learning clients. `client/client.py` demonstrates connecting to the server using stdio, listing tools, and calling `get_forecast`. The longer learning notes live in `client/README.md`.
+
+### .vscode/
+
+Holds the MCP configuration used by VS Code. `mcp.json` points to `server/weather.py` and uses `uv` to run the server with the shared environment.
+
+### pyproject.toml and uv.lock
+
+Define and lock Python dependencies for the whole project. There is a single shared virtual environment under `.venv`.
 
 ---
 
@@ -98,7 +121,7 @@ GitHub Copilot (VS Code)
 
 ## Code Overview
 
-The MCP server is implemented in `weather.py`:
+The MCP server is implemented in `server/weather.py`:
 
 - Creates a `FastMCP` server instance: `mcp = FastMCP("weather")`.
 - Uses `httpx.AsyncClient` to call the NWS API with a custom `User-Agent`.
@@ -197,7 +220,7 @@ From the project folder:
 
 ```powershell
 Set-Location "D:\my first mcp\weather"
-uv run python weather.py
+uv run python server/weather.py
 ```
 
 The server uses STDIO transport and waits for incoming MCP requests from compatible clients.
@@ -206,7 +229,7 @@ The server uses STDIO transport and waits for incoming MCP requests from compati
 
 ## VS Code MCP Integration
 
-The MCP server config lives at `.vscode/mcp.json`. Current working config:
+The MCP server config lives at `weather/.vscode/mcp.json`. Current working config:
 
 ```json
 {
@@ -217,9 +240,9 @@ The MCP server config lives at `.vscode/mcp.json`. Current working config:
       "args": [
         "run",
         "--project",
-        "weather",
+        ".",
         "python",
-        "weather/weather.py"
+        "server/weather.py"
       ]
     }
   },
@@ -228,6 +251,19 @@ The MCP server config lives at `.vscode/mcp.json`. Current working config:
 ```
 
 This ensures `uv` runs the script from the correct project and picks up the local environment.
+
+---
+
+## MCP Client (Learning)
+
+The client lives in `client/client.py` and shows how to connect to the server using stdio, list tools, and call `get_forecast`.
+
+Run it from the project folder:
+
+```powershell
+Set-Location "D:\my first mcp\weather"
+uv run python client/client.py
+```
 
 ---
 
@@ -279,10 +315,4 @@ Through this project I learned:
 - Deploy as a remote MCP server
 
 ---
-
-## Author
-
-Nakul Jadhav
-
-Learning Project: First MCP Server using Python and FastMCP
 
