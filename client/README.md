@@ -1,4 +1,4 @@
-# MCP Weather Client Documentation (V1 -> V5)
+# MCP Weather Client Documentation (V1 -> V5.1)
 
 ## Project Overview
 
@@ -14,7 +14,7 @@ get_forecast(latitude, longitude)
 get_alerts(state)
 ```
 
-The MCP Client gradually evolved from a simple tool discovery client into an intent-driven assistant capable of automatically selecting tools based on user requests. V5 adds a Gemini 2.5 Flash powered agent that chooses tools and reasons over tool output.
+The MCP Client gradually evolved from a simple tool discovery client into an intent-driven assistant capable of automatically selecting tools based on user requests. V5 adds a Gemini 2.5 Flash powered agent that chooses tools and reasons over tool output. V5.1 adds global geocoding so the client can resolve cities worldwide at runtime.
 
 ---
 
@@ -620,6 +620,164 @@ Drive carefully if traveling in affected areas.
 
 ---
 
+# V5.1 - Gemini-Powered MCP Client with Global Geocoding
+
+## Overview
+
+V5.1 upgrades the MCP client from a static city-based implementation to a dynamic AI-powered client capable of handling weather requests for cities worldwide.
+
+The client uses:
+
+* Gemini 2.5 Flash for tool selection
+* Open-Meteo Geocoding API for city-to-coordinate conversion
+* MCP protocol for tool communication
+* Weather MCP Server for weather retrieval
+
+Unlike previous versions that relied on hardcoded city mappings, V5.1 dynamically resolves locations at runtime.
+
+---
+
+## Architecture
+
+```text
+User
+ |
+ v
+Gemini 2.5 Flash
+ |
+ v
+Tool Selection
+ |
+ v
+Open-Meteo Geocoding API
+ |
+ v
+Latitude / Longitude
+ |
+ v
+MCP Client
+ |
+ v
+Weather MCP Server
+```
+
+---
+
+## Key Features
+
+### AI-Based Tool Selection
+
+Gemini analyzes natural language queries and automatically selects the appropriate MCP tool.
+
+Example:
+
+```text
+Should I carry an umbrella tomorrow in Tokyo?
+```
+
+Gemini Output:
+
+```json
+{
+    "tool": "get_forecast",
+    "city": "Tokyo"
+}
+```
+
+---
+
+### Global City Support
+
+Supports weather requests for cities worldwide.
+
+Examples:
+
+```text
+Weather in Ahmedabad
+
+Forecast for London
+
+Should I carry an umbrella in Tokyo?
+
+Weather in Sydney
+```
+
+---
+
+### Dynamic Geocoding
+
+Instead of maintaining hardcoded coordinates, the client uses Open-Meteo Geocoding API:
+
+```text
+City Name
+            |
+            v
+Geocoding API
+            |
+            v
+Latitude / Longitude
+```
+
+Example:
+
+```text
+Ahmedabad
+|
+v
+23.02579, 72.58727
+```
+
+---
+
+## Example Execution
+
+User:
+
+```text
+What's the weather in New York?
+```
+
+Gemini:
+
+```json
+{
+    "tool": "get_forecast",
+    "city": "New York"
+}
+```
+
+Geocoding:
+
+```text
+New York
+|
+v
+40.71427, -74.00597
+```
+
+MCP Tool:
+
+```python
+get_forecast(
+        latitude=40.71427,
+        longitude=-74.00597
+)
+```
+
+---
+
+## Learning Outcomes (V5.1)
+
+* MCP Client Development
+* Gemini Tool Calling
+* LLM-Based Routing
+* Geocoding APIs
+* Structured JSON Responses
+* Agent Foundations
+* Tool Orchestration
+
+---
+
 # Evolution Summary
 
 ## V1
@@ -694,6 +852,21 @@ Learned:
 
 ---
 
+## V5.1
+
+```text
+Global Geocoding
+Dynamic City Resolution
+```
+
+Learned:
+
+* Geocoding APIs
+* LLM-Based Routing
+* Tool Orchestration
+
+---
+
 # Real-World Connection
 
 Modern AI frameworks follow a similar pattern.
@@ -732,24 +905,11 @@ External System
 
 The V4 client is essentially a simplified version of this architecture without using an LLM.
 
+The V5 client extends this with Gemini-driven tool selection and response synthesis. V5.1 adds global geocoding so the client can route requests for cities worldwide.
+
 ---
 
-# Future Versions
-
-## V5
-
-LLM-Powered MCP Client
-
-```text
-Gemini/OpenAI
-        |
-        v
-MCP Client
-        v
-Weather MCP Server
-```
-
-The LLM decides which tool to call.
+# Future Versions (V6+)
 
 ---
 
@@ -791,7 +951,7 @@ Final Response
 
 # Key Learning Outcomes
 
-Through V1-V4, the following MCP concepts were implemented:
+Through V1-V5.1, the following MCP concepts were implemented:
 
 * MCP Client Development
 * MCP Server Communication
@@ -803,5 +963,13 @@ Through V1-V4, the following MCP concepts were implemented:
 * Intent Detection
 * Automatic Tool Selection
 * Agent Foundations
+* LLM Tool Selection
+* MCP + Gemini Integration
+* Tool Reasoning
+* Structured Outputs
+* Function Calling Concepts
+* Geocoding APIs
+* LLM-Based Routing
+* Tool Orchestration
 
 These concepts form the foundation of modern MCP-powered AI systems and agent architectures.
