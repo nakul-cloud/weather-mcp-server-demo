@@ -18,6 +18,7 @@ This MCP server exposes weather-related tools that can be discovered and invoked
 
 This repository demonstrates the complete MCP workflow:
 
+```text
 User
  │
  ▼
@@ -40,27 +41,29 @@ Weather Data
  │
  ▼
 AI Generated Response
+``` 
 
 The project is divided into two major components:
 
 Client
 
 Located in:
+```text
 
 client/
-
+```
 Contains multiple MCP client implementations developed incrementally from V1 to V5.1.
 
 Key concepts explored:
 
-MCP Session Initialization
-Tool Discovery
-Tool Inspection
-Tool Invocation
-Intent Detection
-Gemini Tool Selection
-Geocoding Integration
-AI Agent Workflows
+- MCP Session Initialization
+- Tool Discovery
+- Tool Inspection
+- Tool Invocation
+- Intent Detection
+- Gemini Tool Selection
+- Geocoding Integration
+- AI Agent Workflows
 
 See:
 
@@ -68,9 +71,11 @@ client/README.md
 
 for detailed client evolution and implementation notes.
 
-Server
+Server 
 
+```text
 Located in:
+```
 
 server/
 
@@ -79,11 +84,11 @@ Contains multiple MCP weather server implementations.
 Key concepts explored:
 
 FastMCP
-MCP Tool Development
-External API Integration
-Weather Forecast Services
-Global Weather Support
-MCP Server Architecture
+- MCP Tool Development
+- External API Integration
+- Weather Forecast Services
+- Global Weather Support
+- MCP Server Architecture
 
 See:
 
@@ -91,7 +96,8 @@ server/README.md
 
 for detailed server documentation.
 
-Current Architecture (V5.2)
+### Current Architecture (V5.2)
+```text
 User
  │
  ▼
@@ -120,7 +126,7 @@ Gemini Explanation
  │
  ▼
 Final Response
-
+```
 ---
 
 ## Features
