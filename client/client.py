@@ -1,4 +1,3 @@
- 
 import asyncio
 
 from mcp import ClientSession
@@ -9,7 +8,6 @@ from mcp.client.stdio import (
 
 
 async def list_tools(session):
-    """List all available MCP tools"""
 
     tools = await session.list_tools()
 
@@ -20,7 +18,6 @@ async def list_tools(session):
 
 
 async def show_tool_details(session):
-    """Display tool metadata and schema"""
 
     tools = await session.list_tools()
 
@@ -41,23 +38,11 @@ async def show_tool_details(session):
         print("=" * 60)
 
 
-async def get_forecast(session):
-    """Call get_forecast MCP tool"""
-
-    try:
-        latitude = float(
-            input("\nEnter Latitude: ")
-        )
-
-        longitude = float(
-            input("Enter Longitude: ")
-        )
-
-    except ValueError:
-        print("\nInvalid coordinates.")
-        return
-
-    print("\nFetching Forecast...\n")
+async def call_forecast(
+    session,
+    latitude,
+    longitude
+):
 
     result = await session.call_tool(
         "get_forecast",
@@ -74,19 +59,15 @@ async def get_forecast(session):
             print(content.text)
 
 
-async def get_alerts(session):
-    """Call get_alerts MCP tool"""
-
-    state = input(
-        "\nEnter US State Code (NY, CA, TX etc): "
-    ).strip().upper()
-
-    print("\nFetching Alerts...\n")
+async def call_alerts(
+    session,
+    state
+):
 
     result = await session.call_tool(
         "get_alerts",
         {
-            "state": state
+            "state": state.upper()
         }
     )
 
@@ -119,47 +100,109 @@ async def main():
             write_stream
         ) as session:
 
-            print("\nInitializing MCP Session...")
-
             await session.initialize()
 
-            print("\nConnected Successfully!")
+            print("\n" + "=" * 60)
+            print("      MCP WEATHER ASSISTANT V3")
+            print("=" * 60)
+
+            print("\nCommands:")
+            print("tools")
+            print("details")
+            print("forecast <latitude> <longitude>")
+            print("alerts <state>")
+            print("exit")
 
             while True:
 
-                print("\n" + "=" * 50)
-                print("         MCP WEATHER CLIENT V2")
-                print("=" * 50)
-
-                print("1. List Available Tools")
-                print("2. Get Weather Forecast")
-                print("3. Get Weather Alerts")
-                print("4. Show Tool Details")
-                print("5. Exit")
-
-                choice = input(
-                    "\nEnter Choice: "
+                user_input = input(
+                    "\nYou: "
                 ).strip()
 
-                if choice == "1":
-                    await list_tools(session)
+                if not user_input:
+                    continue
 
-                elif choice == "2":
-                    await get_forecast(session)
+                if user_input.lower() == "exit":
 
-                elif choice == "3":
-                    await get_alerts(session)
-
-                elif choice == "4":
-                    await show_tool_details(session)
-
-                elif choice == "5":
                     print("\nGoodbye!")
                     break
 
+                elif user_input.lower() == "tools":
+
+                    await list_tools(session)
+
+                elif user_input.lower() == "details":
+
+                    await show_tool_details(session)
+
+                elif user_input.lower().startswith(
+                    "forecast"
+                ):
+
+                    parts = user_input.split()
+
+                    if len(parts) != 3:
+
+                        print(
+                            "\nUsage:"
+                            "\nforecast <lat> <lon>"
+                        )
+
+                        continue
+
+                    try:
+
+                        latitude = float(parts[1])
+                        longitude = float(parts[2])
+
+                        await call_forecast(
+                            session,
+                            latitude,
+                            longitude
+                        )
+
+                    except ValueError:
+
+                        print(
+                            "\nLatitude and Longitude "
+                            "must be numbers."
+                        )
+
+                elif user_input.lower().startswith(
+                    "alerts"
+                ):
+
+                    parts = user_input.split()
+
+                    if len(parts) != 2:
+
+                        print(
+                            "\nUsage:"
+                            "\nalerts NY"
+                        )
+
+                        continue
+
+                    state = parts[1]
+
+                    await call_alerts(
+                        session,
+                        state
+                    )
+
                 else:
+
                     print(
-                        "\nInvalid choice. Please try again."
+                        "\nUnknown command."
+                    )
+
+                    print(
+                        "\nTry:"
+                        "\n tools"
+                        "\n details"
+                        "\n forecast 40.7128 -74.0060"
+                        "\n alerts NY"
+                        "\n exit"
                     )
 
 
