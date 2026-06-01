@@ -1,18 +1,180 @@
-# Weather MCP Server (Python)
+# Weather MCP Server (Python + Gemini + MCP)
 
-A beginner-friendly Weather MCP (Model Context Protocol) Server built using Python, FastMCP, and the National Weather Service (NWS) API.
+A hands-on learning project built to understand the Model Context Protocol (MCP), MCP server development, MCP client development, tool calling, and AI agent architectures.
 
-This project was created to learn the fundamentals of MCP, including MCP server development, tool creation, VS Code integration, and external API communication.
+The project evolved from a basic MCP weather server into a Gemini-powered AI agent capable of:
+
+Discovering MCP tools
+Calling MCP tools dynamically
+Resolving locations worldwide
+Retrieving weather forecasts globally
+Generating natural language responses using Gemini 2.5 Flash
 
 ---
 
 ## Project Overview
 
-This MCP server exposes weather-related tools that can be discovered and invoked by MCP-compatible clients such as Visual Studio Code with GitHub Copilot. It communicates with the National Weather Service (NWS) API and provides weather forecasts and weather alerts through MCP tools.
+This MCP server exposes weather-related tools that can be discovered and invoked by MCP-compatible clients such as Visual Studio Code with GitHub Copilot. It communicates with the National Weather Service (NWS) API and provides weather forecasts and weather alerts through MCP tools selection using NLP and External API's.
+
+This repository demonstrates the complete MCP workflow:
+
+User
+ │
+ ▼
+Gemini 2.5 Flash
+ │
+ ▼
+Tool Selection
+ │
+ ▼
+MCP Client
+ │
+ ▼
+MCP Server
+ │
+ ▼
+External APIs
+ │
+ ▼
+Weather Data
+ │
+ ▼
+AI Generated Response
+
+The project is divided into two major components:
+
+Client
+
+Located in:
+
+client/
+
+Contains multiple MCP client implementations developed incrementally from V1 to V5.1.
+
+Key concepts explored:
+
+MCP Session Initialization
+Tool Discovery
+Tool Inspection
+Tool Invocation
+Intent Detection
+Gemini Tool Selection
+Geocoding Integration
+AI Agent Workflows
+
+See:
+
+client/README.md
+
+for detailed client evolution and implementation notes.
+
+Server
+
+Located in:
+
+server/
+
+Contains multiple MCP weather server implementations.
+
+Key concepts explored:
+
+FastMCP
+MCP Tool Development
+External API Integration
+Weather Forecast Services
+Global Weather Support
+MCP Server Architecture
+
+See:
+
+server/README.md
+
+for detailed server documentation.
+
+Current Architecture (V5.2)
+User
+ │
+ ▼
+Gemini 2.5 Flash
+ │
+ ▼
+Tool Selection
+ │
+ ▼
+Open-Meteo Geocoding API
+ │
+ ▼
+Coordinates
+ │
+ ▼
+Weather MCP Server
+ │
+ ▼
+Open-Meteo Forecast API
+ │
+ ▼
+Weather Data
+ │
+ ▼
+Gemini Explanation
+ │
+ ▼
+Final Response
 
 ---
 
 ## Features
+AI-Powered Weather Assistant
+
+Ask questions such as:
+
+What's the weather in New York?
+
+Will it rain tomorrow in London?
+
+Do I need a jacket in Paris?
+
+Should I carry an umbrella in Tokyo?
+
+The system automatically:
+
+1. Understands the request using Gemini
+2. Selects the appropriate MCP tool
+3. Resolves the location
+4. Retrieves weather information
+5. Generates a human-friendly response
+
+## Client and Server Evolution
+
+### Client Evolution
+
+```text
+V1  Tool Discovery
+
+V2  Tool Inspection
+
+V3  Interactive Tool Invocation
+
+V4  Intent-Based Routing
+
+V5  Gemini Tool Selection
+
+V5.1 Global Geocoding + AI Agent
+```
+
+### Server Evolution
+
+```text
+weather.py
+National Weather Service (NWS)
+
+↓
+
+weather_v5_2.py
+Open-Meteo Forecast API
+```
+
+
 
 ### Weather Alerts Tool
 
@@ -32,13 +194,24 @@ Retrieve active weather alerts for a U.S. state.
 ---
 
 ### Weather Forecast Tool
+Global Weather Forecasting
 
-Retrieve weather forecast information using geographic coordinates.
+Supported worldwide through:
 
-**Input**
+Open-Meteo Geocoding API
+Open-Meteo Forecast API
 
-- Latitude
-- Longitude
+Example locations:
+
+Ahmedabad
+New York
+London
+Tokyo
+Sydney
+Paris
+Berlin
+Dubai
+Singapore
 
 **Output**
 
@@ -57,7 +230,10 @@ Retrieve weather forecast information using geographic coordinates.
 - HTTPX
 - Visual Studio Code
 - GitHub Copilot
-- National Weather Service API
+- Google GenAI SDk
+- Open-Meteo Geocoding API
+- Open-Meteo Forecast API
+- Gemini 2.5 Flash
 
 ---
 
@@ -66,71 +242,144 @@ Retrieve weather forecast information using geographic coordinates.
 ```text
 weather/
 ├── client/
-│   └── client.py
+│   ├── client_v1.py
+│   ├── client_v2.py
+│   ├── client_v3.py
+│   ├── client_v4.py
+│   ├── client_v5.py
+│   ├── client_v5_1.py
+│   └── README.md
+│
 ├── server/
-│   └── weather.py
+│   ├── weather.py
+│   ├── weather_v5_2.py
+│   └── README.md
+│
 ├── .vscode/
 │   └── mcp.json
+│
+├── .env
+├── .gitignore
 ├── pyproject.toml
 ├── uv.lock
-├── README.md
-└── main.py
+└── README.md
+```
+
+## Folder Overview
+
+### client/
+
+Contains multiple MCP client implementations developed throughout the learning journey.
+
+| Version | Description                                |
+| ------- | ------------------------------------------ |
+| V1      | MCP Tool Discovery Client                  |
+| V2      | MCP Tool Inspection Client                 |
+| V3      | Interactive Command-Based Client           |
+| V4      | Intent-Based MCP Client                    |
+| V5      | Gemini-Powered MCP Agent                   |
+| V5.1    | Gemini Agent with Global Geocoding Support |
+
+Concepts explored:
+
+* MCP Session Management
+* Tool Discovery
+* Tool Inspection
+* Tool Invocation
+* Intent Detection
+* Gemini Tool Calling
+* Geocoding APIs
+* Agent Workflows
+
+Detailed documentation:
+
+```text
+client/README.md
 ```
 
 ---
 
-## Folder Overview
-
 ### server/
 
-Contains the MCP server implementation. The entry point is `server/weather.py`, which defines the MCP tools and runs the server over STDIO.
+Contains MCP weather server implementations.
 
-### client/
+| Version         | Description                                                      |
+| --------------- | ---------------------------------------------------------------- |
+| weather.py      | Original Weather MCP Server using National Weather Service (NWS) |
+| weather_v5_2.py | Global Weather MCP Server using Open-Meteo Forecast API          |
 
-Contains learning clients. `client/client.py` demonstrates connecting to the server using stdio, listing tools, and calling `get_forecast`. The longer learning notes live in `client/README.md`.
+Concepts explored:
+
+* FastMCP
+* Tool Development
+* Weather APIs
+* External API Integration
+* Global Weather Support
+* MCP Server Architecture
+
+Detailed documentation:
+
+```text
+server/README.md
+```
+
+---
 
 ### .vscode/
 
-Holds the MCP configuration used by VS Code. `mcp.json` points to `server/weather.py` and uses `uv` to run the server with the shared environment.
+Contains MCP configuration files used by VS Code and GitHub Copilot.
+
+---
 
 ### pyproject.toml and uv.lock
 
-Define and lock Python dependencies for the whole project. There is a single shared virtual environment under `.venv`.
+Dependency management files used by the project.
 
 ---
+
+### .env
+
+Stores environment variables such as:
+
+```text
+GEMINI_API_KEY
+```
+
+Used by the Gemini-powered MCP client.
+
 
 ## MCP Architecture
 
 ```text
-GitHub Copilot (VS Code)
-           |
-           v
-      MCP Client
-           |
-           v
-     Weather MCP Server
-           |
-           v
- National Weather Service API
-           |
-           v
-      Weather Data
+User
+ │
+ ▼
+Gemini 2.5 Flash
+ │
+ ▼
+MCP Client
+ │
+ ▼
+MCP Server
+ │
+ ▼
+Open-Meteo Forecast API
+ │
+ ▼
+Weather Data
+ │
+ ▼
+Gemini Generated Response
 ```
-
----
 
 ## Code Overview
 
-The MCP server is implemented in `server/weather.py`:
+The repository currently contains two MCP server implementations:
 
-- Creates a `FastMCP` server instance: `mcp = FastMCP("weather")`.
-- Uses `httpx.AsyncClient` to call the NWS API with a custom `User-Agent`.
-- Exposes two MCP tools with `@mcp.tool()` decorators:
-  - `get_alerts(state)` fetches active alerts for a US state.
-  - `get_forecast(latitude, longitude)` fetches the 5-period forecast.
-- Runs the server in `main()` with `mcp.run(transport="stdio")`.
+- `server/weather.py` – Original Weather MCP Server using the National Weather Service (NWS) API.
+- `server/weather_v5_2.py` – Global Weather MCP Server using the Open-Meteo Forecast API.
 
-`main.py` is a placeholder file and is not used by the MCP server.
+The latest version (`weather_v5_2.py`) powers the Gemini-based weather agent and supports worldwide weather forecasting.
 
 ---
 
@@ -160,6 +409,11 @@ get_forecast(
     longitude=-74.0060
 )
 ```
+The tools are exposed through FastMCP and can be invoked by:
+
+- VS Code GitHub Copilot
+- Custom Python MCP Clients
+- Gemini-powered MCP Agent Clients
 
 ---
 
@@ -204,13 +458,15 @@ uv sync
 or
 
 ```bash
-uv add "mcp[cli]" httpx
+uv add "mcp[cli]" httpx google-genai python-dotenv
 ```
 
-Dependencies are defined in `pyproject.toml`:
+Dependencies are defined in pyproject.toml:
 
-- `mcp[cli]`
-- `httpx`
+- mcp[cli]
+- httpx
+- google-genai
+- python-dotenv
 
 ---
 
@@ -254,18 +510,25 @@ This ensures `uv` runs the script from the correct project and picks up the loca
 
 ---
 
-## MCP Client (Learning)
+## MCP Clients
 
-The client lives in `client/client.py` and shows how to connect to the server using stdio, list tools, and call `get_forecast`.
+The repository contains multiple MCP client versions developed incrementally.
 
-Run it from the project folder:
+Current client versions:
 
-```powershell
-Set-Location "D:\my first mcp\weather"
-uv run python client/client.py
-```
+- client_v1.py
+- client_v2.py
+- client_v3.py
+- client_v4.py
+- client_v5.py
+- client_v5_1.py
 
----
+The latest version (`client_v5_1.py`) integrates:
+
+- Gemini 2.5 Flash
+- Open-Meteo Geocoding API
+- Dynamic MCP Tool Selection
+- Natural Language Weather Queries
 
 ## Troubleshooting
 
@@ -300,8 +563,29 @@ Through this project I learned:
 - https://github.com/modelcontextprotocol/python-sdk
 - https://code.visualstudio.com/docs/copilot/chat/mcp-servers
 - https://www.weather.gov/documentation/services-web-api
+- https://ai.google.dev
+- https://open-meteo.com
 
 ---
+## Detailed Documentation
+
+Detailed implementation documentation is available in:
+
+```text
+client/README.md
+server/README.md
+```
+
+These documents provide:
+
+- Client evolution from V1 to V5.1
+- Server evolution from weather.py to weather_v5_2.py
+- Gemini integration
+- Open-Meteo Geocoding workflow
+- Open-Meteo Forecast API integration
+- MCP architecture
+- Learning outcomes
+- Future enhancements
 
 ## Future Improvements
 
